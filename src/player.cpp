@@ -1,5 +1,7 @@
+#include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <cmath>
+#include <cstdlib>
 #include <iostream>
 #include <math.h>
 
@@ -15,14 +17,29 @@ Player::Player(float x, float y) : sprite(texture) {
     std::cerr << "Couldn't load image";
   }
 
-  position = sf::Vector2<float>(60, 60);
+  sprite.setScale(MAP_BLOCK_SIZE, MAP_BLOCK_SIZE);
+  size = texture.getSize().y;
+
+  position = sf::Vector2<float>(x, y);
+
+  plane = sf::Vector2<float>(0, 0.66);
+  direction = sf::Vector2<float>(-1, 0);
+}
+
+Player::Player(sf::Vector2<float> initPos)
+    : position(initPos), sprite(texture) {
+  if (!texture.loadFromFile("src/assets/images/player.png")) {
+    std::cerr << "Couldn't load image";
+  }
+
+  sprite.setScale(1. / 3, 1. / 3);
   direction = sf::Vector2<float>(0, -1);
   plane = sf::Vector2<float>(0, 0.66);
   size = texture.getSize().y;
 }
 
 void Player::draw(sf::RenderWindow *window) {
-  sprite.setPosition(position.x, position.y);
+  sprite.setPosition(position.x * MAP_BLOCK_SIZE, position.y * MAP_BLOCK_SIZE);
   sprite.setRotation(90 + rad_to_deg(std::atan2(direction.y, direction.x)));
   sprite.setOrigin(size / 2, size / 2);
 
@@ -37,8 +54,8 @@ void Player::update(sf::RenderWindow *window, Map *map, float *dt) {
 
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ||
       sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-    sf::Vector2<float> oldDirection{direction};
-    sf::Vector2<float> oldPlane{plane};
+    sf::Vector2<float> oldDirection = direction;
+    sf::Vector2<float> oldPlane = plane;
 
     direction.x =
         direction.x * cos(-rotationSpeed) - direction.y * sin(-rotationSpeed);
@@ -52,7 +69,7 @@ void Player::update(sf::RenderWindow *window, Map *map, float *dt) {
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) ||
       sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
     sf::Vector2<float> oldDirection = direction;
-    sf::Vector2<float> oldPlane{plane};
+    sf::Vector2<float> oldPlane = plane;
 
     direction.x =
         direction.x * cos(rotationSpeed) - direction.y * sin(rotationSpeed);
@@ -69,11 +86,11 @@ void Player::update(sf::RenderWindow *window, Map *map, float *dt) {
     float dx = movementSpeed * direction.x;
     float dy = movementSpeed * direction.y;
 
-    if (!map->check_if_wall(position.x + dx, position.y)) {
+    if (!map->check_if_wall(position.x + dx, position.y, 1)) {
       position.x += movementSpeed * direction.x;
     }
 
-    if (!map->check_if_wall(position.x, position.y + dy)) {
+    if (!map->check_if_wall(position.x, position.y + dy, 1)) {
       position.y += movementSpeed * direction.y;
     }
   }
@@ -83,11 +100,11 @@ void Player::update(sf::RenderWindow *window, Map *map, float *dt) {
     float dx = movementSpeed * direction.x;
     float dy = movementSpeed * direction.y;
 
-    if (!map->check_if_wall(position.x - dx, position.y)) {
+    if (!map->check_if_wall(position.x - dx, position.y, 1)) {
       position.x -= movementSpeed * direction.x;
     }
 
-    if (!map->check_if_wall(position.x, position.y - dy)) {
+    if (!map->check_if_wall(position.x, position.y - dy, 1)) {
       position.y -= movementSpeed * direction.y;
     }
   }

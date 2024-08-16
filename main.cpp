@@ -20,13 +20,12 @@ int main() {
                           "Hello CPP", sf::Style::Default, settings);
 
   window.setActive(true);
-  // window.setFramerateLimit(60);
 
   float dt;
   sf::Clock clock;
 
-  Player player(600, WINDOW_HEIGHT / 2.0);
   Map map{};
+  Player player(map.getPlayerPosition(1));
 
   while (window.isOpen()) {
     sf::Event event;
@@ -42,6 +41,7 @@ int main() {
     player.update(&window, &map, &dt);
 
     window.clear(sf::Color::Black);
+    player.traditionalRayCast(&map, &window);
     map.draw(&window);
     player.draw(&window);
 

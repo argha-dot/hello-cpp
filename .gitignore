@@ -33,5 +33,6 @@
 
 .vscode/
 .cache/
+ignore/
 
 compile_commands.json

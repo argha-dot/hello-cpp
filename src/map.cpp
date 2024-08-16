@@ -1,3 +1,4 @@
+#include <SFML/System/Vector2.hpp>
 #include <fstream>
 #include <iostream>
 #include <math.h>
@@ -25,7 +26,6 @@ Map::Map() : wall_sprite(wall_texture) {
 
   map = {};
 
-  int col{0};
   while (std::getline(levelFile, line)) {
     std::vector<Block> map_row;
     int row_len{
@@ -43,14 +43,33 @@ Map::Map() : wall_sprite(wall_texture) {
     }
 
     map.push_back(map_row);
-    col++;
   }
   levelFile.close();
+}
+
+sf::Vector2<float> Map::getPlayerPosition(float block_size) {
+
+  int col_len{
+      static_cast<int>(map.size())}; // converting long unsigned int to int
+
+  for (int col = 0; col < col_len; col++) {
+    int row_len{static_cast<int>(
+        map[col].size())}; // converting long unsigned int to int
+
+    for (int row = 0; row < row_len; row++) {
+      if (map[col][row] == Block::IPlayer) {
+        return sf::Vector2<float>(row * block_size, col * block_size);
+      }
+    }
+  }
+
+  return sf::Vector2<float>(15 * block_size, 10 * block_size);
 }
 
 void Map::draw(sf::RenderWindow *window) {
   int col_len{
       static_cast<int>(map.size())}; // converting long unsigned int to int
+
   for (int col = 0; col < col_len; col++) {
     int row_len{static_cast<int>(
         map[col].size())}; // converting long unsigned int to int
@@ -64,18 +83,18 @@ void Map::draw(sf::RenderWindow *window) {
 
         window->draw(wall_sprite);
       }
-
-      if (map[col][row] == Block::IPlayer) {
-      }
     }
   }
 }
 
-bool Map::check_if_wall(float x, float y) {
-  int pos_x = x / MAP_BLOCK_SIZE;
-  int pos_y = y / MAP_BLOCK_SIZE;
+Block Map::getWall(int x, int y) { return map[y][x]; }
 
-  if (map[pos_y][pos_x] != Block::Empty) {
+bool Map::check_if_wall(float x, float y, float block_size) {
+  int pos_x = x / block_size;
+  int pos_y = y / block_size;
+
+  if (map[pos_y][pos_x] != Block::Empty &&
+      map[pos_y][pos_x] != Block::IPlayer) {
     return true;
   }
 

@@ -15,8 +15,12 @@ public:
   sf::Sprite sprite;
 
   Player(float x, float y);
+  Player(sf::Vector2<float> initPos);
 
   void draw(sf::RenderWindow *window);
   void update(sf::RenderWindow *window, Map *map, float *dt);
   void setPosition(float x, float y);
+
+  void traditionalRayCast(Map *map, sf::RenderWindow *window);
+  void borkedRayCast(Map *map, sf::RenderWindow *window);
 };

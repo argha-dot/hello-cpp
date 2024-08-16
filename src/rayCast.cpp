@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
@@ -5,14 +7,13 @@
 #include "headers/map.h"
 #include "headers/player.h"
 
-void Player::traditionalRayCast(Map *map, sf::RenderWindow *window) {}
-
-void Player::borkedRayCast(Map *map, sf::RenderWindow *window) {
+void Player::rayCast(Map *map, sf::RenderWindow *window) {
   for (int ray = 0; ray < WINDOW_WIDTH; ray++) {
     float cameraX = 2.0 * ray / WINDOW_WIDTH - 1;
 
     sf::Vector2<float> rayDirection(direction.x + plane.x * cameraX,
                                     direction.y + plane.y * cameraX);
+    // std::cout << rayDirection.x << " " << rayDirection.y << std::endl;
 
     sf::Vector2<float> mapPosition(int(position.x), int(position.y));
 
@@ -26,8 +27,8 @@ void Player::borkedRayCast(Map *map, sf::RenderWindow *window) {
 
     sf::Vector2<int> step;
 
-    bool hit = false; // Was a wall hit?
-    int side;         // Which side of the wall was hit?
+    int hit = 0; // Was a wall hit?
+    int side;    // Which side of the wall was hit?
 
     if (rayDirection.x < 0) {
       step.x = -1;
@@ -45,7 +46,7 @@ void Player::borkedRayCast(Map *map, sf::RenderWindow *window) {
       sideDistance.y = (mapPosition.y + 1.0 - position.y) * deltaDistance.y;
     }
 
-    while (!hit) {
+    while (hit == 0) {
       if (sideDistance.x < sideDistance.y) {
         sideDistance.x += deltaDistance.x;
         mapPosition.x += step.x;
@@ -57,7 +58,7 @@ void Player::borkedRayCast(Map *map, sf::RenderWindow *window) {
       }
 
       if (map->check_if_wall(mapPosition.x, mapPosition.y, 1)) {
-        hit = true;
+        hit = 1;
       }
     }
 
@@ -84,6 +85,9 @@ void Player::borkedRayCast(Map *map, sf::RenderWindow *window) {
     case Block::Wall:
       color = sf::Color::Red;
       break;
+    case Block::Column:
+      color = sf::Color::Green;
+      break;
     case Block::IPlayer:
       break;
     default:
@@ -102,6 +106,15 @@ void Player::borkedRayCast(Map *map, sf::RenderWindow *window) {
         sf::Vertex(sf::Vector2f(ray, drawEnd), color),
     };
 
+    // sf::Vertex miniMapRay[] = {
+    //     sf::Vertex(sf::Vector2f(mapPosition.x, mapPosition.y),
+    //                sf::Color::White),
+    //     sf::Vertex(sf::Vector2f(position.x * MAP_BLOCK_SIZE,
+    //                             position.y * MAP_BLOCK_SIZE),
+    //                sf::Color::White),
+    // };
+
     window->draw(line, 2, sf::Lines);
+    // window->draw(miniMapRay, 2, sf::Lines);
   }
 }

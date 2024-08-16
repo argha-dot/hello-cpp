@@ -10,9 +10,13 @@
 #include "headers/globals.h"
 #include "headers/map.h"
 
-Map::Map() : wall_sprite(wall_texture) {
+Map::Map() : wall_sprite(wall_texture), column_sprite(column_texture) {
 
   if (!wall_texture.loadFromFile("src/assets/images/wall.png")) {
+    std::cout << "Error Opening Texture" << std::endl;
+  }
+
+  if (!column_texture.loadFromFile("src/assets/images/column.png")) {
     std::cout << "Error Opening Texture" << std::endl;
   }
 
@@ -37,6 +41,8 @@ Map::Map() : wall_sprite(wall_texture) {
         map_row.push_back(Block::Wall);
       } else if (ch == 'P') {
         map_row.push_back(Block::IPlayer);
+      } else if (ch == '@') {
+        map_row.push_back(Block::Column);
       } else {
         map_row.push_back(Block::Empty);
       }
@@ -82,6 +88,14 @@ void Map::draw(sf::RenderWindow *window) {
         wall_sprite.setScale(2, 2);
 
         window->draw(wall_sprite);
+      }
+      if (map[col][row] == Block::Column) {
+        column_sprite.setPosition(MAP_BLOCK_SIZE * row, MAP_BLOCK_SIZE * col);
+        column_sprite.setTextureRect(
+            sf::IntRect(0, 0, MAP_BLOCK_SIZE / 2, MAP_BLOCK_SIZE / 2));
+        column_sprite.setScale(2, 2);
+
+        window->draw(column_sprite);
       }
     }
   }

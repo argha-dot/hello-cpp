@@ -41,7 +41,7 @@ int main() {
     player.update(&window, &map, &dt);
 
     window.clear(sf::Color::Black);
-    player.traditionalRayCast(&map, &window);
+    player.rayCast(&map, &window);
     map.draw(&window);
     player.draw(&window);
 

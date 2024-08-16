@@ -33,7 +33,7 @@ Player::Player(sf::Vector2<float> initPos)
   }
 
   sprite.setScale(1. / 3, 1. / 3);
-  direction = sf::Vector2<float>(0, -1);
+  direction = sf::Vector2<float>(-1, 0);
   plane = sf::Vector2<float>(0, 0.66);
   size = texture.getSize().y;
 }
@@ -58,20 +58,6 @@ void Player::update(sf::RenderWindow *window, Map *map, float *dt) {
     sf::Vector2<float> oldPlane = plane;
 
     direction.x =
-        direction.x * cos(-rotationSpeed) - direction.y * sin(-rotationSpeed);
-    direction.y = oldDirection.x * sin(-rotationSpeed) +
-                  direction.y * cos(-rotationSpeed);
-
-    plane.x = plane.x * cos(-rotationSpeed) - plane.y * sin(-rotationSpeed);
-    plane.y = oldPlane.x * sin(-rotationSpeed) + plane.y * cos(-rotationSpeed);
-  }
-
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) ||
-      sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-    sf::Vector2<float> oldDirection = direction;
-    sf::Vector2<float> oldPlane = plane;
-
-    direction.x =
         direction.x * cos(rotationSpeed) - direction.y * sin(rotationSpeed);
     direction.y =
         oldDirection.x * sin(rotationSpeed) + direction.y * cos(rotationSpeed);
@@ -80,11 +66,27 @@ void Player::update(sf::RenderWindow *window, Map *map, float *dt) {
     plane.y = oldPlane.x * sin(rotationSpeed) + plane.y * cos(rotationSpeed);
   }
 
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) ||
+      sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+    sf::Vector2<float> oldDirection = direction;
+    sf::Vector2<float> oldPlane = plane;
+
+    direction.x =
+        direction.x * cos(-rotationSpeed) - direction.y * sin(-rotationSpeed);
+    direction.y = oldDirection.x * sin(-rotationSpeed) +
+                  direction.y * cos(-rotationSpeed);
+
+    plane.x = plane.x * cos(-rotationSpeed) - plane.y * sin(-rotationSpeed);
+    plane.y = oldPlane.x * sin(-rotationSpeed) + plane.y * cos(-rotationSpeed);
+  }
+
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ||
       sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 
-    float dx = movementSpeed * direction.x;
-    float dy = movementSpeed * direction.y;
+    float dx = (direction.x > 0) ? movementSpeed * direction.x + 0.5f
+                                 : movementSpeed * direction.x - 0.5f;
+    float dy = (direction.y < 0) ? movementSpeed * direction.y - 0.5f
+                                 : movementSpeed * direction.y + 0.5f;
 
     if (!map->check_if_wall(position.x + dx, position.y, 1)) {
       position.x += movementSpeed * direction.x;
@@ -97,8 +99,10 @@ void Player::update(sf::RenderWindow *window, Map *map, float *dt) {
 
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) ||
       sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-    float dx = movementSpeed * direction.x;
-    float dy = movementSpeed * direction.y;
+    float dx = (direction.x > 0) ? movementSpeed * direction.x + 0.5f
+                                 : movementSpeed * direction.x - 0.5f;
+    float dy = (direction.y < 0) ? movementSpeed * direction.y - 0.5f
+                                 : movementSpeed * direction.y + 0.5f;
 
     if (!map->check_if_wall(position.x - dx, position.y, 1)) {
       position.x -= movementSpeed * direction.x;

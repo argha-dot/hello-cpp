@@ -21,6 +21,5 @@ public:
   void update(sf::RenderWindow *window, Map *map, float *dt);
   void setPosition(float x, float y);
 
-  void traditionalRayCast(Map *map, sf::RenderWindow *window);
-  void borkedRayCast(Map *map, sf::RenderWindow *window);
+  void rayCast(Map *map, sf::RenderWindow *window);
 };

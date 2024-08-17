@@ -6,7 +6,7 @@
 
 #include "globals.h"
 
-enum Block { Empty, Wall, Column, IPlayer };
+enum Block { Empty, Wall, Column, Door, IPlayer };
 
 class Map {
 
@@ -15,6 +15,9 @@ class Map {
 
   sf::Sprite column_sprite;
   sf::Texture column_texture;
+
+  sf::Sprite door_sprite;
+  sf::Texture door_texture;
 
 public:
   Map();

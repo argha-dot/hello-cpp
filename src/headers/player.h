@@ -1,6 +1,7 @@
 #pragma once
 #include "map.h"
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
 
 class Player {
   sf::Vector2<float> position;  // The player's position vector
@@ -10,6 +11,9 @@ class Player {
   float size;
 
   sf::Texture texture;
+
+  void rotatePlayer(float rotationSpeed);
+  void handleMouse(sf::Window *window, float *dt);
 
 public:
   sf::Sprite sprite;

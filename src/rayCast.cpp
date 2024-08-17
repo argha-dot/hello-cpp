@@ -88,6 +88,9 @@ void Player::rayCast(Map *map, sf::RenderWindow *window) {
     case Block::Column:
       color = sf::Color::Green;
       break;
+    case Block::Door:
+      color = sf::Color::Blue;
+      break;
     case Block::IPlayer:
       break;
     default:

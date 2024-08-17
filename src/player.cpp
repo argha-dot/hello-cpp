@@ -48,41 +48,70 @@ void Player::draw(sf::RenderWindow *window) {
   window->draw(sprite);
 }
 
+void Player::handleMouse(sf::Window *window, float *dt) {
+  sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+  unsigned int windowCenterX = WINDOW_WIDTH / 2;
+
+  float roatationX = (static_cast<float>(windowCenterX) - mousePos.x) /
+                     WINDOW_WIDTH * *dt * MOUSE_SENSITIVITY;
+  rotatePlayer(roatationX);
+
+  sf::Mouse::setPosition(sf::Vector2i(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2),
+                         *window);
+}
+
+void Player::rotatePlayer(float rotationSpeed) {
+  sf::Vector2<float> oldDirection = direction;
+  sf::Vector2<float> oldPlane = plane;
+
+  direction.x =
+      direction.x * cos(rotationSpeed) - direction.y * sin(rotationSpeed);
+  direction.y =
+      oldDirection.x * sin(rotationSpeed) + direction.y * cos(rotationSpeed);
+
+  plane.x = plane.x * cos(rotationSpeed) - plane.y * sin(rotationSpeed);
+  plane.y = oldPlane.x * sin(rotationSpeed) + plane.y * cos(rotationSpeed);
+}
+
 void Player::update(sf::RenderWindow *window, Map *map, float *dt) {
-  float rotationSpeed = PLAYER_ROTATION_SPEED * *dt;
   float movementSpeed = PLAYER_MOVEMENT_SPEED * *dt;
+
+  handleMouse(window, dt);
 
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ||
       sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-    sf::Vector2<float> oldDirection = direction;
-    sf::Vector2<float> oldPlane = plane;
+    float dx = (plane.x > 0) ? movementSpeed * direction.x + 0.5f
+                             : movementSpeed * plane.x - 0.5f;
+    float dy = (plane.y < 0) ? movementSpeed * direction.y - 0.5f
+                             : movementSpeed * plane.y + 0.5f;
 
-    direction.x =
-        direction.x * cos(rotationSpeed) - direction.y * sin(rotationSpeed);
-    direction.y =
-        oldDirection.x * sin(rotationSpeed) + direction.y * cos(rotationSpeed);
+    if (!map->check_if_wall(position.x - dx, position.y, 1)) {
+      position.x -= movementSpeed * plane.x;
+    }
 
-    plane.x = plane.x * cos(rotationSpeed) - plane.y * sin(rotationSpeed);
-    plane.y = oldPlane.x * sin(rotationSpeed) + plane.y * cos(rotationSpeed);
+    if (!map->check_if_wall(position.x, position.y - dy, 1)) {
+      position.y -= movementSpeed * plane.y;
+    }
   }
 
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) ||
       sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-    sf::Vector2<float> oldDirection = direction;
-    sf::Vector2<float> oldPlane = plane;
+    float dx = (plane.x > 0) ? movementSpeed * plane.x + 0.5f
+                             : movementSpeed * plane.x - 0.5f;
+    float dy = (plane.y < 0) ? movementSpeed * plane.y - 0.5f
+                             : movementSpeed * plane.y + 0.5f;
 
-    direction.x =
-        direction.x * cos(-rotationSpeed) - direction.y * sin(-rotationSpeed);
-    direction.y = oldDirection.x * sin(-rotationSpeed) +
-                  direction.y * cos(-rotationSpeed);
+    if (!map->check_if_wall(position.x + dx, position.y, 1)) {
+      position.x += movementSpeed * plane.x;
+    }
 
-    plane.x = plane.x * cos(-rotationSpeed) - plane.y * sin(-rotationSpeed);
-    plane.y = oldPlane.x * sin(-rotationSpeed) + plane.y * cos(-rotationSpeed);
+    if (!map->check_if_wall(position.x, position.y + dy, 1)) {
+      position.y += movementSpeed * plane.y;
+    }
   }
 
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ||
       sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-
     float dx = (direction.x > 0) ? movementSpeed * direction.x + 0.5f
                                  : movementSpeed * direction.x - 0.5f;
     float dy = (direction.y < 0) ? movementSpeed * direction.y - 0.5f

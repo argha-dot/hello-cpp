@@ -10,13 +10,19 @@
 #include "headers/globals.h"
 #include "headers/map.h"
 
-Map::Map() : wall_sprite(wall_texture), column_sprite(column_texture) {
+Map::Map()
+    : wall_sprite(wall_texture), column_sprite(column_texture),
+      door_sprite(door_texture) {
 
   if (!wall_texture.loadFromFile("src/assets/images/wall.png")) {
     std::cout << "Error Opening Texture" << std::endl;
   }
 
   if (!column_texture.loadFromFile("src/assets/images/column.png")) {
+    std::cout << "Error Opening Texture" << std::endl;
+  }
+
+  if (!door_texture.loadFromFile("src/assets/images/door.png")) {
     std::cout << "Error Opening Texture" << std::endl;
   }
 
@@ -43,6 +49,8 @@ Map::Map() : wall_sprite(wall_texture), column_sprite(column_texture) {
         map_row.push_back(Block::IPlayer);
       } else if (ch == '@') {
         map_row.push_back(Block::Column);
+      } else if (ch == 'D') {
+        map_row.push_back(Block::Door);
       } else {
         map_row.push_back(Block::Empty);
       }
@@ -96,6 +104,14 @@ void Map::draw(sf::RenderWindow *window) {
         column_sprite.setScale(2, 2);
 
         window->draw(column_sprite);
+      }
+      if (map[col][row] == Block::Door) {
+        door_sprite.setPosition(MAP_BLOCK_SIZE * row, MAP_BLOCK_SIZE * col);
+        door_sprite.setTextureRect(
+            sf::IntRect(0, 0, MAP_BLOCK_SIZE / 2, MAP_BLOCK_SIZE / 2));
+        door_sprite.setScale(2, 2);
+
+        window->draw(door_sprite);
       }
     }
   }

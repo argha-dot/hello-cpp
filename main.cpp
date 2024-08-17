@@ -19,6 +19,9 @@ int main() {
   sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT),
                           "Hello CPP", sf::Style::Default, settings);
 
+  window.setVerticalSyncEnabled(true);
+  window.setMouseCursorVisible(false);
+  window.setMouseCursorGrabbed(true);
   window.setActive(true);
 
   float dt;

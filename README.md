@@ -17,4 +17,4 @@ The Idea is to create a game that uses a ray caster to render a semi-3D scene.
   - [ ] Lighting
 - [x] Add a basic minimap
   - [ ] Add a state machine for basic menus and states
-    
+ 

@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
@@ -13,7 +11,6 @@ void Player::rayCast(Map *map, sf::RenderWindow *window) {
 
     sf::Vector2<float> rayDirection(direction.x + plane.x * cameraX,
                                     direction.y + plane.y * cameraX);
-    // std::cout << rayDirection.x << " " << rayDirection.y << std::endl;
 
     sf::Vector2<float> mapPosition(int(position.x), int(position.y));
 
@@ -83,10 +80,10 @@ void Player::rayCast(Map *map, sf::RenderWindow *window) {
 
     switch (map->getWall(mapPosition.x, mapPosition.y)) {
     case Block::Wall:
-      color = sf::Color::Red;
+      color = PRIMARY_COLOR;
       break;
     case Block::Column:
-      color = sf::Color::Green;
+      color = ACCENTT_COLOR;
       break;
     case Block::Door:
       color = sf::Color::Blue;

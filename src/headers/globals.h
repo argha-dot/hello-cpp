@@ -13,6 +13,9 @@ constexpr float MAP_BLOCK_SIZE = 8;
 constexpr int WINDOW_WIDTH = 900;
 constexpr int WINDOW_HEIGHT = 600;
 
+constexpr int TEXTURE_WIDTH = 64;
+constexpr int TEXTURE_HEIGHT = 64;
+
 const sf::Color BG_LIGHT_COLOR = sf::Color(225, 216, 212);
 const sf::Color ACCENTT_COLOR = sf::Color(135, 140, 157);
 const sf::Color PRIMARY_COLOR = sf::Color(69, 86, 141);

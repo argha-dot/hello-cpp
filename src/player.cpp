@@ -85,11 +85,11 @@ void Player::update(sf::RenderWindow *window, Map *map, float *dt) {
     float dy = (plane.y < 0) ? movementSpeed * direction.y - 0.5f
                              : movementSpeed * plane.y + 0.5f;
 
-    if (!map->check_if_wall(position.x - dx, position.y, 1)) {
+    if (!map->checkIfWall(position.x - dx, position.y, 1)) {
       position.x -= movementSpeed * plane.x;
     }
 
-    if (!map->check_if_wall(position.x, position.y - dy, 1)) {
+    if (!map->checkIfWall(position.x, position.y - dy, 1)) {
       position.y -= movementSpeed * plane.y;
     }
   }
@@ -101,11 +101,11 @@ void Player::update(sf::RenderWindow *window, Map *map, float *dt) {
     float dy = (plane.y < 0) ? movementSpeed * plane.y - 0.5f
                              : movementSpeed * plane.y + 0.5f;
 
-    if (!map->check_if_wall(position.x + dx, position.y, 1)) {
+    if (!map->checkIfWall(position.x + dx, position.y, 1)) {
       position.x += movementSpeed * plane.x;
     }
 
-    if (!map->check_if_wall(position.x, position.y + dy, 1)) {
+    if (!map->checkIfWall(position.x, position.y + dy, 1)) {
       position.y += movementSpeed * plane.y;
     }
   }
@@ -117,11 +117,11 @@ void Player::update(sf::RenderWindow *window, Map *map, float *dt) {
     float dy = (direction.y < 0) ? movementSpeed * direction.y - 0.5f
                                  : movementSpeed * direction.y + 0.5f;
 
-    if (!map->check_if_wall(position.x + dx, position.y, 1)) {
+    if (!map->checkIfWall(position.x + dx, position.y, 1)) {
       position.x += movementSpeed * direction.x;
     }
 
-    if (!map->check_if_wall(position.x, position.y + dy, 1)) {
+    if (!map->checkIfWall(position.x, position.y + dy, 1)) {
       position.y += movementSpeed * direction.y;
     }
   }
@@ -133,11 +133,11 @@ void Player::update(sf::RenderWindow *window, Map *map, float *dt) {
     float dy = (direction.y < 0) ? movementSpeed * direction.y - 0.5f
                                  : movementSpeed * direction.y + 0.5f;
 
-    if (!map->check_if_wall(position.x - dx, position.y, 1)) {
+    if (!map->checkIfWall(position.x - dx, position.y, 1)) {
       position.x -= movementSpeed * direction.x;
     }
 
-    if (!map->check_if_wall(position.x, position.y - dy, 1)) {
+    if (!map->checkIfWall(position.x, position.y - dy, 1)) {
       position.y -= movementSpeed * direction.y;
     }
   }

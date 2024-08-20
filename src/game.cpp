@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include "headers/game.h"
@@ -9,15 +11,18 @@ Game::Game()
     : window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Hello CPP",
              sf::Style::Default, settings),
       floor(sf::Vector2f(WINDOW_WIDTH, static_cast<float>(WINDOW_HEIGHT) / 2)),
-      player(map.getPlayerPosition(1)) {
-  window.draw(floor);
+      player(map.getPlayerPosition(1)), lines(sf::Lines, 1) {
+
+  if (!textureMap.loadFromFile("src/assets/images/wall_sprite.png")) {
+    std::cerr << "Error Opening Texture" << std::endl;
+  }
 
   settings = window.getSettings();
   settings.antialiasingLevel = 8;
 
   window.setVerticalSyncEnabled(true);
   window.setMouseCursorVisible(false);
-  window.setMouseCursorGrabbed(true);
+  // window.setMouseCursorGrabbed(true);
   window.setActive(true);
 
   floor.setFillColor(BG_LIGHT_COLOR);
@@ -31,7 +36,7 @@ void Game::draw() {
   window.clear(BG_DARK_COLOR);
 
   window.draw(floor);
-  player.rayCast(&map, &window);
+  player.rayCast(&map, &window, &lines, &textureMap);
   map.draw(&window);
   player.draw(&window);
 
@@ -47,6 +52,7 @@ void Game::handleEvents() {
       window.close();
     }
   }
+  lines.resize(0);
 }
 
 void Game::update() {

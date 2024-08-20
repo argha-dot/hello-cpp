@@ -30,7 +30,7 @@ public:
    * Hence, if you want to check if player is colliding with wall,
    * send the raw (x, y)
    */
-  bool check_if_wall(float x, float y, float block_size = MAP_BLOCK_SIZE);
+  bool checkIfWall(float x, float y, float block_size = MAP_BLOCK_SIZE);
 
   Block getWall(int x, int y);
   sf::Vector2<float> getPlayerPosition(float block_size = MAP_BLOCK_SIZE);

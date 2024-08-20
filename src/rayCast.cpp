@@ -1,11 +1,17 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include <cmath>
 
+#include "headers/globals.h"
 #include "headers/map.h"
 #include "headers/player.h"
 
-void Player::rayCast(Map *map, sf::RenderWindow *window) {
+void Player::rayCast(Map *map, sf::RenderWindow *window, sf::VertexArray *lines,
+                     sf::Texture *texture) {
+  sf::RenderStates state(texture);
+
   for (int ray = 0; ray < WINDOW_WIDTH; ray++) {
     float cameraX = 2.0 * ray / WINDOW_WIDTH - 1;
 
@@ -20,12 +26,12 @@ void Player::rayCast(Map *map, sf::RenderWindow *window) {
         (rayDirection.x == 0) ? 1e30 : std::abs(1 / rayDirection.x),
         (rayDirection.y == 0) ? 1e30 : std::abs(1 / rayDirection.y));
 
-    float perpendicularWallDistance;
+    float perpendicularWallDistance = 0.0;
 
-    sf::Vector2<int> step;
+    sf::Vector2<int> step = sf::Vector2<int>(0, 0);
 
-    int hit = 0; // Was a wall hit?
-    int side;    // Which side of the wall was hit?
+    int hit = 0;  // Was a wall hit?
+    int side = 0; // Which side of the wall was hit?
 
     if (rayDirection.x < 0) {
       step.x = -1;
@@ -54,7 +60,7 @@ void Player::rayCast(Map *map, sf::RenderWindow *window) {
         side = 1;
       }
 
-      if (map->check_if_wall(mapPosition.x, mapPosition.y, 1)) {
+      if (map->checkIfWall(mapPosition.x, mapPosition.y, 1)) {
         hit = 1;
       }
     }
@@ -76,24 +82,22 @@ void Player::rayCast(Map *map, sf::RenderWindow *window) {
       drawEnd = WINDOW_HEIGHT - 1;
     }
 
-    sf::Color color;
-
-    switch (map->getWall(mapPosition.x, mapPosition.y)) {
-    case Block::Wall:
-      color = PRIMARY_COLOR;
-      break;
-    case Block::Column:
-      color = ACCENTT_COLOR;
-      break;
-    case Block::Door:
-      color = sf::Color::Blue;
-      break;
-    case Block::IPlayer:
-      break;
-    default:
-      color = sf::Color::Yellow;
-      break;
+    float wallX = 0.0;
+    if (side == 0) {
+      wallX = position.y + rayDirection.y * perpendicularWallDistance;
+    } else {
+      wallX = position.x + rayDirection.x * perpendicularWallDistance;
     }
+
+    wallX -= std::floor(wallX);
+
+    int texX = int(wallX * TEXTURE_WIDTH);
+    if ((side == 1 && rayDirection.x <= 0) ||
+        (side == 0 && rayDirection.y >= 0)) {
+      texX = TEXTURE_WIDTH - texX - 1;
+    }
+
+    sf::Color color{sf::Color::White};
 
     if (side == 1) {
       color.r /= 2;
@@ -101,20 +105,17 @@ void Player::rayCast(Map *map, sf::RenderWindow *window) {
       color.b /= 2;
     }
 
-    sf::Vertex line[] = {
-        sf::Vertex(sf::Vector2f(ray, drawStart), color),
-        sf::Vertex(sf::Vector2f(ray, drawEnd), color),
-    };
+    lines->append(
+        sf::Vertex(sf::Vector2f(ray, drawStart), color, sf::Vector2f(texX, 0)));
+    lines->append(sf::Vertex(sf::Vector2f(ray, drawEnd), color,
+                             sf::Vector2f(texX, TEXTURE_HEIGHT)));
 
-    // sf::Vertex miniMapRay[] = {
-    //     sf::Vertex(sf::Vector2f(mapPosition.x, mapPosition.y),
-    //                sf::Color::White),
-    //     sf::Vertex(sf::Vector2f(position.x * MAP_BLOCK_SIZE,
-    //                             position.y * MAP_BLOCK_SIZE),
-    //                sf::Color::White),
+    // sf::Vertex line[] = {
+    //     sf::Vertex(sf::Vector2f(ray, drawStart), color),
+    //     sf::Vertex(sf::Vector2f(ray, drawEnd), color),
     // };
 
-    window->draw(line, 2, sf::Lines);
-    // window->draw(miniMapRay, 2, sf::Lines);
+    // window->draw(line, 2, sf::Lines);
+    window->draw(*lines, state);
   }
 }

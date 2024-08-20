@@ -119,7 +119,7 @@ void Map::draw(sf::RenderWindow *window) {
 
 Block Map::getWall(int x, int y) { return map[y][x]; }
 
-bool Map::check_if_wall(float x, float y, float block_size) {
+bool Map::checkIfWall(float x, float y, float block_size) {
   int pos_x = x / block_size;
   int pos_y = y / block_size;
 

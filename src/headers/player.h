@@ -1,5 +1,6 @@
 #pragma once
 #include "map.h"
+#include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
 
@@ -25,5 +26,6 @@ public:
   void update(sf::RenderWindow *window, Map *map, float *dt);
   void setPosition(float x, float y);
 
-  void rayCast(Map *map, sf::RenderWindow *window);
+  void rayCast(Map *map, sf::RenderWindow *window, sf::VertexArray *lines,
+               sf::Texture *texture);
 };

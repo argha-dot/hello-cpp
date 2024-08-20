@@ -2,7 +2,7 @@
 CXX = g++
 
 # Flags
-CXXFLAGS = -Wall -g
+CXXFLAGS = -Wall -g -O3
 
 # Target file name
 TARGET = main.out

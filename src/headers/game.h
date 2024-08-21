@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 
 #include "map.h"
@@ -20,6 +21,7 @@ class Game {
 
 public:
   sf::VertexArray lines;
+  sf::RenderStates state;
 
   Game();
   void updateDelta();

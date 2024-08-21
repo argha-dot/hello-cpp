@@ -1,5 +1,6 @@
 #pragma once
 #include "map.h"
+#include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
@@ -27,5 +28,5 @@ public:
   void setPosition(float x, float y);
 
   void rayCast(Map *map, sf::RenderWindow *window, sf::VertexArray *lines,
-               sf::Texture *texture);
+               sf::Texture *texture, sf::RenderStates *state);
 };

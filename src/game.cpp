@@ -17,12 +17,12 @@ Game::Game()
     std::cerr << "Error Opening Texture" << std::endl;
   }
 
+  state.texture = &textureMap;
   settings = window.getSettings();
   settings.antialiasingLevel = 8;
 
   window.setVerticalSyncEnabled(true);
   window.setMouseCursorVisible(false);
-  // window.setMouseCursorGrabbed(true);
   window.setActive(true);
 
   floor.setFillColor(BG_LIGHT_COLOR);
@@ -36,7 +36,7 @@ void Game::draw() {
   window.clear(BG_DARK_COLOR);
 
   window.draw(floor);
-  player.rayCast(&map, &window, &lines, &textureMap);
+  player.rayCast(&map, &window, &lines, &textureMap, &state);
   map.draw(&window);
   player.draw(&window);
 

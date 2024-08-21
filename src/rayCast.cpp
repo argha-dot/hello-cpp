@@ -9,8 +9,7 @@
 #include "headers/player.h"
 
 void Player::rayCast(Map *map, sf::RenderWindow *window, sf::VertexArray *lines,
-                     sf::Texture *texture) {
-  sf::RenderStates state(texture);
+                     sf::Texture *texture, sf::RenderStates *state) {
 
   for (int ray = 0; ray < WINDOW_WIDTH; ray++) {
     float cameraX = 2.0 * ray / WINDOW_WIDTH - 1;
@@ -109,13 +108,6 @@ void Player::rayCast(Map *map, sf::RenderWindow *window, sf::VertexArray *lines,
         sf::Vertex(sf::Vector2f(ray, drawStart), color, sf::Vector2f(texX, 0)));
     lines->append(sf::Vertex(sf::Vector2f(ray, drawEnd), color,
                              sf::Vector2f(texX, TEXTURE_HEIGHT)));
-
-    // sf::Vertex line[] = {
-    //     sf::Vertex(sf::Vector2f(ray, drawStart), color),
-    //     sf::Vertex(sf::Vector2f(ray, drawEnd), color),
-    // };
-
-    // window->draw(line, 2, sf::Lines);
-    window->draw(*lines, state);
   }
+  window->draw(*lines, *state);
 }

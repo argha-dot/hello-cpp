@@ -10,10 +10,10 @@ The Idea is to create a game that uses a ray caster to render a semi-3D scene.
 ## How to run
 
 Dunno how to do it in windows, but on linux, you can do this:
-
-- Install SFML
-  > `sudo apt install libsfml-dev`
-- Run `make`
+ - Clone the Repo
+ - Make sure `g++` and `make` are installed, if not, install them by running `sudo apt install build-essential`
+ - Install SFML by running `sudo apt install libsfml-dev`
+ - Run `make` in the root directory of the project
 
 ## TODOs
 
@@ -24,12 +24,12 @@ Dunno how to do it in windows, but on linux, you can do this:
     - [x] Refactor the main game logic into it's own class
     - [ ] Floors and Ceilings
     - [ ] Sprites and Decals
-    - [ ] Doors, Transparent Walls,
+    - [ ] Doors, Transparent Walls, 
   - General Engine Stuff
     - [ ] Add something like a tile map, and use a texture atlas instead of loading the textures individually
     - [ ] Animations
     - [ ] Lighting
-    - [ ] Use Something Like Portals (in Wolf3d) or Binary Space Partitioning (if I dare to) to do the level loading.
+    - [ ] Use Something Like Portals (in Wolf3d) or Binary Space Partitioning to do the level loading
 - Gameplay and Player Experience Stuff
   - [x] Add a basic minimap
     - [x] Make it look better, for eg, add a translucent background to the minimap
@@ -38,3 +38,4 @@ Dunno how to do it in windows, but on linux, you can do this:
   - [ ] Add a state machine for basic menus and states
   - [ ] Add a HUD
   - [ ] Add the Player Model
+ 

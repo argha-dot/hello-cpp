@@ -1,8 +1,10 @@
+#include <cmath>
+#include <iostream>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
-#include <cmath>
 
 #include "headers/globals.h"
 #include "headers/map.h"
@@ -71,15 +73,11 @@ void Player::rayCast(Map *map, sf::RenderWindow *window, sf::VertexArray *lines,
     }
 
     int lineHeight = (int)(WINDOW_HEIGHT / perpendicularWallDistance);
-    int drawStart = -lineHeight / 2 + WINDOW_HEIGHT / 2;
-    if (drawStart < 0) {
-      drawStart = 0;
-    }
+    int drawStart = static_cast<int>(-lineHeight * (1. - CAMERA_HEIGHT) +
+                                     WINDOW_HEIGHT * 0.5f);
 
-    int drawEnd = lineHeight / 2 + WINDOW_HEIGHT / 2;
-    if (drawEnd >= WINDOW_HEIGHT) {
-      drawEnd = WINDOW_HEIGHT - 1;
-    }
+    int drawEnd =
+        static_cast<int>(lineHeight * CAMERA_HEIGHT + WINDOW_HEIGHT * 0.5f);
 
     float wallX = 0.0;
     if (side == 0) {
@@ -90,7 +88,7 @@ void Player::rayCast(Map *map, sf::RenderWindow *window, sf::VertexArray *lines,
 
     wallX -= std::floor(wallX);
 
-    int texX = int(wallX * TEXTURE_WIDTH);
+    int texX = int(wallX * float(TEXTURE_WIDTH));
     if ((side == 1 && rayDirection.x <= 0) ||
         (side == 0 && rayDirection.y >= 0)) {
       texX = TEXTURE_WIDTH - texX - 1;
@@ -104,10 +102,12 @@ void Player::rayCast(Map *map, sf::RenderWindow *window, sf::VertexArray *lines,
       color.b /= 2;
     }
 
-    lines->append(
-        sf::Vertex(sf::Vector2f(ray, drawStart), color, sf::Vector2f(texX, 0)));
-    lines->append(sf::Vertex(sf::Vector2f(ray, drawEnd), color,
-                             sf::Vector2f(texX, TEXTURE_HEIGHT)));
+    lines->append(sf::Vertex(
+        sf::Vector2f(static_cast<float>(ray), static_cast<float>(drawStart)),
+        color, sf::Vector2f(texX, 0)));
+    lines->append(sf::Vertex(
+        sf::Vector2f(static_cast<float>(ray), static_cast<float>(drawEnd)),
+        color, sf::Vector2f(texX, TEXTURE_HEIGHT - 1)));
   }
   window->draw(*lines, *state);
 }

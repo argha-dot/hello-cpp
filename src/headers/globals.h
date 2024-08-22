@@ -5,6 +5,7 @@ constexpr float PI = 3.141592653589793116f;
 
 constexpr float PLAYER_ROTATION_SPEED = 3;
 constexpr float PLAYER_MOVEMENT_SPEED = 5;
+constexpr float CAMERA_HEIGHT = 0.6f;
 
 constexpr float MOUSE_SENSITIVITY = 120;
 

@@ -80,9 +80,9 @@ void Player::update(sf::RenderWindow *window, Map *map, float *dt) {
 
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ||
       sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-    float dx = (plane.x > 0) ? movementSpeed * direction.x + 0.5f
+    float dx = (plane.x > 0) ? movementSpeed * plane.x + 0.5f
                              : movementSpeed * plane.x - 0.5f;
-    float dy = (plane.y < 0) ? movementSpeed * direction.y - 0.5f
+    float dy = (plane.y < 0) ? movementSpeed * plane.y - 0.5f
                              : movementSpeed * plane.y + 0.5f;
 
     if (!map->checkIfWall(position.x - dx, position.y, 1)) {

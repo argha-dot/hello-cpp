@@ -13,7 +13,8 @@ Game::Game()
       floor(sf::Vector2f(WINDOW_WIDTH, static_cast<float>(WINDOW_HEIGHT) / 2)),
       player(map.getPlayerPosition(1)), lines(sf::Lines, 18 * WINDOW_WIDTH) {
 
-  if (!textureMap.loadFromFile("src/assets/images/wall_sprite.png")) {
+  // if (!textureMap.loadFromFile("src/assets/images/wall_sprite.png")) {
+  if (!textureMap.loadFromFile("src/assets/images/some.png")) {
     std::cerr << "Error Opening Texture" << std::endl;
   }
 

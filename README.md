@@ -26,7 +26,13 @@ Dunno how to do it in windows, but on linux, you can do this:
     - [ ] Sprites and Decals
     - [ ] Doors, Transparent Walls,
   - General Engine Stuff
-    - [ ] Render everything into an image and then scale that image to the window size.
+    - [x] Render everything into an image and then scale that image to the window size.
+      > This is done due to the performance issues with the ray caster and software rendering itself. 
+      > Rendering something like floors and ceilings which blits to the whole screen every frame lead to significant performance loss. The game went from running at 120 FPS at 720p to 90 FPS.
+      > One possible solution would've been to optimize the floor and ceiling casting, but that would've been a bit more work than I wanted, and the thing I've been using is apparently kinda optimized.
+      > And it still wouldn't have solved the performance issues completely, as the just using the ray caster to render the walls at 1080p, without the floors, without any event checking dropped the FPS to 60,
+      > So now I just render the ray casted walls and the ceiling / floor to a smaller sf::Image, and then scale that image to the window size by a factor of WINDOW_WIDTH / SCREEN_WIDTH.
+      > This leads to a solid 120 FPS at 1080p, at the cost of a bit of texture quality. But because of the pixel art style, it's not noticeable at around 200% scaling.
     - [ ] Add something like a tile map, and use a texture atlas instead of loading the textures individually
     - [ ] Animations
     - [ ] Lighting

@@ -13,7 +13,6 @@ class Game {
 
   sf::Texture textureMap;
 
-  sf::RectangleShape floor;
   float dt;
   sf::Clock clock;
   Map map;
@@ -22,6 +21,12 @@ class Game {
 public:
   sf::VertexArray lines;
   sf::RenderStates state;
+
+  // This is where the game puts everything
+  sf::Image windowImage;
+  // This gets rendered
+  sf::Texture windowTexture;
+  sf::Sprite windowSprite;
 
   Game();
   void updateDelta();

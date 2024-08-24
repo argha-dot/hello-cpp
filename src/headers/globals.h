@@ -11,8 +11,10 @@ constexpr float MOUSE_SENSITIVITY = 120;
 
 constexpr float MAP_BLOCK_SIZE = 8;
 
-constexpr int WINDOW_WIDTH = 192 * 5;
-constexpr int WINDOW_HEIGHT = 108 * 5;
+constexpr int WINDOW_WIDTH = 192 * 9;
+constexpr int WINDOW_HEIGHT = 108 * 9;
+constexpr int SCREEN_WIDTH = 192 * 4;
+constexpr int SCREEN_HEIGHT = 108 * 4;
 
 constexpr int TEXTURE_WIDTH = 64;
 constexpr int TEXTURE_HEIGHT = 64;

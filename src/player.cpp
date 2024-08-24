@@ -50,13 +50,13 @@ void Player::draw(sf::RenderWindow *window) {
 
 void Player::handleMouse(sf::Window *window, float *dt) {
   sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-  unsigned int windowCenterX = WINDOW_WIDTH / 2;
+  unsigned int windowCenterX = SCREEN_WIDTH / 2;
 
   float roatationX = (static_cast<float>(windowCenterX) - mousePos.x) /
-                     WINDOW_WIDTH * *dt * MOUSE_SENSITIVITY;
+                     SCREEN_WIDTH * *dt * MOUSE_SENSITIVITY;
   rotatePlayer(roatationX);
 
-  sf::Mouse::setPosition(sf::Vector2i(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2),
+  sf::Mouse::setPosition(sf::Vector2i(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2),
                          *window);
 }
 

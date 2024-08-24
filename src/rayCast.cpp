@@ -1,4 +1,5 @@
 #include <cmath>
+// #include <iostream>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
@@ -10,36 +11,27 @@
 #include "headers/map.h"
 #include "headers/player.h"
 
-void Player::renderFloor(sf::RenderWindow *window, sf::VertexArray *lines,
-                         sf::Texture *texture, sf::RenderStates *states) {
+void Player::renderFloor(sf::RenderWindow *window, sf::Image *windowImage) {
   sf::Image floor_image;
   floor_image.loadFromFile("src/assets/images/brickwall.png");
 
-  sf::Image image_buffer;
-  image_buffer.create(WINDOW_WIDTH, WINDOW_HEIGHT);
-
-  sf::Sprite floor_sprite;
-  floor_sprite.setPosition(0, 0);
-
-  sf::Texture floor_texture;
-
-  for (int stripe = 0; stripe < WINDOW_HEIGHT; stripe++) {
+  for (int stripe = 0; stripe < SCREEN_HEIGHT; stripe++) {
     sf::Vector2f rayDirLeft(direction.x - plane.x, direction.y - plane.y);
     sf::Vector2f rayDirRight(direction.x + plane.x, direction.y + plane.y);
 
-    int p = stripe - WINDOW_HEIGHT * 0.5f;
-    float cameraHeight = WINDOW_HEIGHT * CAMERA_HEIGHT;
+    int p = stripe - SCREEN_HEIGHT * 0.5f;
+    float cameraHeight = SCREEN_HEIGHT * CAMERA_HEIGHT;
 
     float rowDistance = cameraHeight / p;
 
     sf::Vector2f floorStep(
-        rowDistance * (rayDirRight.x - rayDirLeft.x) / WINDOW_WIDTH,
-        rowDistance * (rayDirRight.y - rayDirLeft.y) / WINDOW_WIDTH);
+        rowDistance * (rayDirRight.x - rayDirLeft.x) / SCREEN_WIDTH,
+        rowDistance * (rayDirRight.y - rayDirLeft.y) / SCREEN_WIDTH);
 
     sf::Vector2f floorPos(position.x + rayDirLeft.x * rowDistance,
                           position.y + rayDirLeft.y * rowDistance);
 
-    for (int ray = 0; ray < WINDOW_WIDTH; ray++) {
+    for (int ray = 0; ray < SCREEN_WIDTH; ray++) {
       sf::Vector2i cell((int)floorPos.x, (int)floorPos.y);
       sf::Vector2i textureCoord(
           static_cast<int>(TEXTURE_WIDTH * (floorPos.x - cell.x)) &
@@ -54,23 +46,21 @@ void Player::renderFloor(sf::RenderWindow *window, sf::VertexArray *lines,
           floor_image.getPixel(textureCoord.x, textureCoord.y);
 
       floor_image_pixel.g /= 3;
-      image_buffer.setPixel(ray, WINDOW_HEIGHT - stripe - 1, floor_image_pixel);
+      windowImage->setPixel(ray, SCREEN_HEIGHT - stripe - 1, floor_image_pixel);
 
       floor_image_pixel.r /= 3;
 
-      image_buffer.setPixel(ray, stripe, floor_image_pixel);
+      windowImage->setPixel(ray, stripe, floor_image_pixel);
     }
   }
-
-  floor_texture.loadFromImage(image_buffer);
-  floor_sprite.setTexture(floor_texture);
-  window->draw(floor_sprite);
 }
 
-void Player::rayCast(Map *map, sf::RenderWindow *window, sf::VertexArray *lines,
-                     sf::Texture *texture, sf::RenderStates *state) {
-  for (int ray = 0; ray < WINDOW_WIDTH; ray++) {
-    float cameraX = 2.0 * ray / WINDOW_WIDTH - 1;
+void Player::rayCast(Map *map, sf::Texture *texture, sf::Image *windowImage) {
+  sf::Image wall_image;
+  wall_image.loadFromFile("src/assets/images/brickwall.png");
+
+  for (int ray = 0; ray < SCREEN_WIDTH; ray++) {
+    float cameraX = 2.0 * ray / SCREEN_WIDTH - 1;
 
     sf::Vector2f rayDirection(direction.x + plane.x * cameraX,
                               direction.y + plane.y * cameraX);
@@ -128,12 +118,20 @@ void Player::rayCast(Map *map, sf::RenderWindow *window, sf::VertexArray *lines,
       perpendicularWallDistance = (sideDistance.y - deltaDistance.y);
     }
 
-    int lineHeight = (int)(WINDOW_HEIGHT / perpendicularWallDistance);
-    int drawStart = static_cast<int>(-lineHeight * (1. - CAMERA_HEIGHT) +
-                                     WINDOW_HEIGHT * 0.5f);
+    int lineHeight = (int)(SCREEN_HEIGHT / perpendicularWallDistance);
+    // int drawStart = static_cast<int>(-lineHeight * (1. - CAMERA_HEIGHT) +
+    //                                  SCREEN_HEIGHT * 0.5f);
+    int drawStart = static_cast<int>(-lineHeight * 0.5f + SCREEN_HEIGHT * 0.5f);
 
-    int drawEnd =
-        static_cast<int>(lineHeight * CAMERA_HEIGHT + WINDOW_HEIGHT * 0.5f);
+    int drawEnd = static_cast<int>(lineHeight * 0.5f + SCREEN_HEIGHT * 0.5f);
+
+    if (drawStart < 0) {
+      drawStart = 0;
+    }
+
+    if (drawEnd >= SCREEN_HEIGHT) {
+      drawEnd = SCREEN_HEIGHT - 1;
+    }
 
     float wallX = 0.0;
     if (side == 0) {
@@ -150,29 +148,32 @@ void Player::rayCast(Map *map, sf::RenderWindow *window, sf::VertexArray *lines,
     //   texX = TEXTURE_WIDTH - texX - 1;
     // }
 
-    sf::Color color{sf::Color::White};
+    float stepSize = 1. * TEXTURE_WIDTH / lineHeight;
+    float texPos =
+        (drawStart - float(SCREEN_HEIGHT) / 2 + float(lineHeight) / 2) *
+        stepSize;
 
-    if (side == 1) {
-      color.r /= 2;
-      color.g /= 2;
-      color.b /= 2;
+    for (int y = drawStart; y < drawEnd; y++) {
+      int texY = static_cast<int>(texPos) & (TEXTURE_HEIGHT - 1);
+      texPos += stepSize;
+      sf::Color color = wall_image.getPixel(texX, texY);
+      // sf::Color color = sf::Color::White;
+      if (side == 1) {
+        color.r /= 2;
+        color.g /= 2;
+        color.b /= 2;
+      }
+
+      switch (hit) {
+      case Block::Column:
+        color.r /= 3;
+        break;
+      case Block::Wall:
+      default:
+        break;
+      }
+
+      windowImage->setPixel(ray, y, color);
     }
-
-    switch (hit) {
-    case Block::Column:
-      color.r /= 3;
-      break;
-    case Block::Wall:
-    default:
-      break;
-    }
-
-    lines->append(sf::Vertex(
-        sf::Vector2f(static_cast<float>(ray), static_cast<float>(drawStart)),
-        color, sf::Vector2f(texX, 0)));
-    lines->append(sf::Vertex(
-        sf::Vector2f(static_cast<float>(ray), static_cast<float>(drawEnd)),
-        color, sf::Vector2f(texX, TEXTURE_HEIGHT)));
   }
-  window->draw(*lines, *state);
 }

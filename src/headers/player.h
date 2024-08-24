@@ -28,8 +28,6 @@ public:
   void update(sf::RenderWindow *window, Map *map, float *dt);
   void setPosition(float x, float y);
 
-  void renderFloor(sf::RenderWindow *window, sf::VertexArray *lines,
-                   sf::Texture *texture, sf::RenderStates *states);
-  void rayCast(Map *map, sf::RenderWindow *window, sf::VertexArray *lines,
-               sf::Texture *texture, sf::RenderStates *state);
+  void renderFloor(sf::RenderWindow *window, sf::Image *windowImage);
+  void rayCast(Map *map, sf::Texture *texture, sf::Image *windowImage);
 };

@@ -10,14 +10,15 @@
 Game::Game()
     : window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Hello CPP",
              sf::Style::Default, settings),
-      floor(sf::Vector2f(WINDOW_WIDTH, static_cast<float>(WINDOW_HEIGHT) / 2)),
-      player(map.getPlayerPosition(1)), lines(sf::Lines, 18 * WINDOW_WIDTH) {
+      player(map.getPlayerPosition(1)), lines(sf::Lines, 18 * SCREEN_WIDTH) {
 
   if (!textureMap.loadFromFile("src/assets/images/brickwall.png")) {
     // if (!textureMap.loadFromFile("src/assets/images/some.png")) {
     std::cerr << "Error Opening Texture" << std::endl;
   }
 
+  windowSprite.setPosition(0, 0);
+  windowImage.create(SCREEN_WIDTH, SCREEN_HEIGHT);
   state.texture = &textureMap;
   settings = window.getSettings();
   settings.antialiasingLevel = 8;
@@ -25,8 +26,6 @@ Game::Game()
   window.setVerticalSyncEnabled(true);
   window.setMouseCursorVisible(false);
   window.setActive(true);
-
-  floor.setFillColor(BG_LIGHT_COLOR);
 
   Map map{};
 }
@@ -38,12 +37,20 @@ void Game::updateDelta() {
 
 void Game::draw() {
   window.clear(BG_DARK_COLOR);
+  // sf::Sprite windowSprite;
 
-  window.draw(floor);
-  player.renderFloor(&window, &lines, &textureMap, &state);
-  player.rayCast(&map, &window, &lines, &textureMap, &state);
+  player.renderFloor(&window, &windowImage);
+  player.rayCast(&map, &windowTexture, &windowImage);
+
+  windowTexture.loadFromImage(windowImage);
+  windowSprite.setTexture(windowTexture);
+  windowSprite.setScale(static_cast<float>(WINDOW_WIDTH) / SCREEN_WIDTH,
+                        static_cast<float>(WINDOW_HEIGHT) / SCREEN_HEIGHT);
+
   map.draw(&window);
   player.draw(&window);
+
+  window.draw(windowSprite);
 
   window.display();
 }

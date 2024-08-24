@@ -32,7 +32,7 @@ public:
    */
   bool checkIfWall(float x, float y, float block_size = MAP_BLOCK_SIZE);
 
-  Block getWall(int x, int y);
+  Block getWall(float x, float y, float block_size = MAP_BLOCK_SIZE);
   sf::Vector2<float> getPlayerPosition(float block_size = MAP_BLOCK_SIZE);
 
   void draw(sf::RenderWindow *window);

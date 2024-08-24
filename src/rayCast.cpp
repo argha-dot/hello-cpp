@@ -1,5 +1,4 @@
 #include <cmath>
-#include <iostream>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
@@ -88,8 +87,8 @@ void Player::rayCast(Map *map, sf::RenderWindow *window, sf::VertexArray *lines,
 
     sf::Vector2i step = sf::Vector2i(0, 0);
 
-    int hit = 0;  // Was a wall hit?
-    int side = 0; // Which side of the wall was hit?
+    Block hit = Block::Empty; // Was a wall hit?
+    int side = 0;             // Which side of the wall was hit?
 
     if (rayDirection.x < 0) {
       step.x = -1;
@@ -107,7 +106,7 @@ void Player::rayCast(Map *map, sf::RenderWindow *window, sf::VertexArray *lines,
       sideDistance.y = (mapPosition.y + 1.0 - position.y) * deltaDistance.y;
     }
 
-    while (hit == 0) {
+    while (hit == Block::Empty) {
       if (sideDistance.x < sideDistance.y) {
         sideDistance.x += deltaDistance.x;
         mapPosition.x += step.x;
@@ -119,7 +118,7 @@ void Player::rayCast(Map *map, sf::RenderWindow *window, sf::VertexArray *lines,
       }
 
       if (map->checkIfWall(mapPosition.x, mapPosition.y, 1)) {
-        hit = 1;
+        hit = map->getWall(mapPosition.x, mapPosition.y, 1);
       }
     }
 
@@ -157,6 +156,15 @@ void Player::rayCast(Map *map, sf::RenderWindow *window, sf::VertexArray *lines,
       color.r /= 2;
       color.g /= 2;
       color.b /= 2;
+    }
+
+    switch (hit) {
+    case Block::Column:
+      color.r /= 3;
+      break;
+    case Block::Wall:
+    default:
+      break;
     }
 
     lines->append(sf::Vertex(

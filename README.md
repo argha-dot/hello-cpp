@@ -22,7 +22,7 @@ Dunno how to do it in windows, but on linux, you can do this:
   - Raycaster stuff
     - [x] Textured Ray Caster
     - [x] Refactor the main game logic into it's own class
-    - [ ] Floors and Ceilings
+    - [x] Floors and Ceilings
     - [ ] Sprites and Decals
     - [ ] Doors, Transparent Walls, 
   - General Engine Stuff

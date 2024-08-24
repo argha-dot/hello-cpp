@@ -17,25 +17,26 @@ Dunno how to do it in windows, but on linux, you can do this:
 
 ## TODOs
 
-- [x] Add a ray caster
 - Add the rest of the game engine / Ray Caster things
   - Raycaster stuff
+    - [x] Add a ray caster
     - [x] Textured Ray Caster
     - [x] Refactor the main game logic into it's own class
     - [x] Floors and Ceilings
     - [ ] Sprites and Decals
-    - [ ] Doors, Transparent Walls, 
+    - [ ] Doors, Transparent Walls,
   - General Engine Stuff
+    - [ ] Render everything into an image and then scale that image to the window size.
     - [ ] Add something like a tile map, and use a texture atlas instead of loading the textures individually
     - [ ] Animations
     - [ ] Lighting
     - [ ] Use Something Like Portals (in Wolf3d) or Binary Space Partitioning to do the level loading
 - Gameplay and Player Experience Stuff
   - [x] Add a basic minimap
-    - [x] Make it look better, for eg, add a translucent background to the minimap
+    - [ ] Make it look better, for eg, add a translucent background to the minimap
   - [x] Add Mouse Input (so moving the mouse changes the direction)
   - [x] Add Left and Right Arrows to strafe
   - [ ] Add a state machine for basic menus and states
-  - [ ] Add a HUD
   - [ ] Add the Player Model
+  - [ ] Add a HUD
  

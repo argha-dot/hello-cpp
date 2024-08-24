@@ -11,7 +11,7 @@ TARGET = main.out
 SRCS = main.cpp src/printStandard.cpp src/player.cpp src/utils.cpp src/map.cpp src/rayCast.cpp src/game.cpp
 
 # Linker Stuff
-LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system -lGL -lGLU
+LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system -lGL
 
 # Object Files
 OBJS = $(SRCS:.cpp=.o)

@@ -13,8 +13,8 @@ Game::Game()
       floor(sf::Vector2f(WINDOW_WIDTH, static_cast<float>(WINDOW_HEIGHT) / 2)),
       player(map.getPlayerPosition(1)), lines(sf::Lines, 18 * WINDOW_WIDTH) {
 
-  // if (!textureMap.loadFromFile("src/assets/images/wall_sprite.png")) {
-  if (!textureMap.loadFromFile("src/assets/images/some.png")) {
+  if (!textureMap.loadFromFile("src/assets/images/brickwall.png")) {
+    // if (!textureMap.loadFromFile("src/assets/images/some.png")) {
     std::cerr << "Error Opening Texture" << std::endl;
   }
 
@@ -31,12 +31,16 @@ Game::Game()
   Map map{};
 }
 
-void Game::updateDelta() { dt = clock.restart().asSeconds(); }
+void Game::updateDelta() {
+  dt = clock.restart().asSeconds();
+  window.setTitle("fps: " + std::to_string(1 / dt));
+}
 
 void Game::draw() {
   window.clear(BG_DARK_COLOR);
 
   window.draw(floor);
+  player.renderFloor(&window, &lines, &textureMap, &state);
   player.rayCast(&map, &window, &lines, &textureMap, &state);
   map.draw(&window);
   player.draw(&window);

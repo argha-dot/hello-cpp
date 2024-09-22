@@ -1,7 +1,6 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 
 #include "map.h"
@@ -11,7 +10,7 @@ class Game {
   sf::ContextSettings settings;
   sf::RenderWindow window;
 
-  sf::Texture textureMap;
+  sf::Image textureImage;
 
   float dt;
   sf::Clock clock;
@@ -20,7 +19,6 @@ class Game {
 
 public:
   sf::VertexArray lines;
-  sf::RenderStates state;
 
   // This is where the game puts everything
   sf::Image windowImage;
